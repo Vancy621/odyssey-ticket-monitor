@@ -182,7 +182,7 @@ class TicketMonitor:
             self.send_bark(f"🎬 {MOVIE_NAME} 新场次放票！", body)
                 else:
 
-            self.log(
+        self.log(
                 "无新场次"
             )
             # 临时测试推送
