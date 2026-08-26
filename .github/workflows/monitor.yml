@@ -1,0 +1,41 @@
+name: 奥德赛放票检测
+
+on:
+  schedule:
+    # 每 5 分钟跑一次（UTC 时间，北京时间 = UTC+8）
+    - cron: '*/5 * * * *'
+  workflow_dispatch:  # 允许手动触发测试
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: 恢复状态文件（缓存）
+        uses: actions/cache@v4
+        with:
+          path: .ticket_monitor_state.json
+          key: ticket-state-${{ github.run_id }}
+          restore-keys: |
+            ticket-state-
+
+      - name: 运行检测脚本
+        env:
+          BARK_KEY: ${{ secrets.BARK_KEY }}
+        run: python monitor.py
+
+      - name: 保存状态文件
+        uses: actions/cache@v4
+        with:
+          path: .ticket_monitor_state.json
+          key: ticket-state-${{ github.run_id }}
