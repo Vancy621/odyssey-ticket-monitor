@@ -180,8 +180,17 @@ class TicketMonitor:
             show_lines = "\n".join(self.format_show_info(show) for show in new_shows)
             body = f"{show_lines}\n\n👉 立即购票:\nhttps://www.maoyan.com/cinema/{CINEMA_ID}"
             self.send_bark(f"🎬 {MOVIE_NAME} 新场次放票！", body)
-        else:
-            self.log("无新场次")
+                else:
+
+            self.log(
+                "无新场次"
+            )
+            # 临时测试推送
+            self.send_bark(
+                "🎬 测试推送",
+                "如果收到这条，说明 Bark 已经通了"
+            )
+       
 
         self.update_state(current_shows)
         self.log("✅ 本次检测完成")
